@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="entrySequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <!-- Generate UUID using JavaScript and set it as CORRELATION_ID -->
+    <propertyGroup>
+        <property expression="json-eval($.number1)" name="number1" scope="default" type="STRING"/>
+        <property expression="json-eval($.number2)" name="number2" scope="default" type="STRING"/>
+    </propertyGroup>
+    <script language="js"><![CDATA[var uuid = generateUUID();
+                mc.setProperty('CorrID', uuid);
+                
+                function generateUUID() {
+                    var d = new Date().getTime();
+                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                        var r = (d + Math.random()*16)%16 | 0;
+                        d = Math.floor(d/16);
+                        return (c==='x' ? r : (r&0x3|0x8)).toString(16);
+                    });
+                }]]></script>
+    <!-- Set the Correlation ID in HTTP header -->
+    <header expression="get-property('CorrID')" name="Correlation-ID" scope="transport"/>
+    <property expression="json-eval($.)" name="MessagePayload" scope="default" type="STRING"/>
+    <!-- Log the Request Message to a File -->
+    <!-- Construct the dynamic file path with CorrID -->
+    <!--  property name="transport.vfs.ReplyFileName" scope="transport" type="STRING" value="Request - 12345679"/ -->
+    <!-- Request-126374 -->
+    <sequence key="requestSequence"/>
+    <property description="Remove OUTonly" name="OUT_ONLY" scope="default" type="STRING" value="false"/>
+</sequence>

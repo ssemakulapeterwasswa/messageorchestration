@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="MessageRoute" groupId="com.example.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/MessageRoute.xml</file>
+    </artifact>
+    <artifact name="MessageRoute_swagger" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/MessageRoute_swagger.yaml</file>
+    </artifact>
+    <artifact name="MessageRoute_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/MessageRoute_metadata.yaml</file>
+    </artifact>
+    <artifact name="GrandOakEP" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/GrandOakEP.xml</file>
+    </artifact>
+    <artifact name="ClemencyEP" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/ClemencyEP.xml</file>
+    </artifact>
+    <artifact name="PineValleyEP" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/PineValleyEP.xml</file>
+    </artifact>
+    <artifact name="HospitalServicesEP" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/HospitalServicesEP.xml</file>
+    </artifact>
+    <artifact name="ChannelingFeeEP" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/ChannelingFeeEP.xml</file>
+    </artifact>
+    <artifact name="SettlePaymentEP" groupId="com.example.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/SettlePaymentEP.xml</file>
+    </artifact>
+    <artifact name="test" groupId="com.example.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/test.xml</file>
+    </artifact>
+    <artifact name="test_swagger" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/test_swagger.yaml</file>
+    </artifact>
+    <artifact name="test_metadata" groupId="com.example.metadata" version="1.0.0" type="synapse/metadata" serverRole="EnterpriseServiceBus">
+        <file>src/main/resources/metadata/test_metadata.yaml</file>
+    </artifact>
+    <artifact name="requestSequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/requestSequence.xml</file>
+    </artifact>
+    <artifact name="responseSequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/responseSequence.xml</file>
+    </artifact>
+    <artifact name="entrySequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/entrySequence.xml</file>
+    </artifact>
+    <artifact name="callEndpointSequence" groupId="com.example.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/callEndpointSequence.xml</file>
+    </artifact>
+</artifacts>

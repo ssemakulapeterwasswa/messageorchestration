@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.example</groupId>
+    <artifactId>MemorialProjectConfigs</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+  <groupId>com.example</groupId>
+  <artifactId>MemorialProjectConfigs_module</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>MemorialProjectConfigs_module</name>
+  <description>MemorialProjectConfigs_module</description>
+  <modules>
+    <module>api/MessageRoute</module>
+    <module>metadata/MessageRoute_swagger</module>
+    <module>metadata/MessageRoute_metadata</module>
+    <module>endpoints/GrandOakEP</module>
+    <module>endpoints/ClemencyEP</module>
+    <module>endpoints/PineValleyEP</module>
+    <module>endpoints/HospitalServicesEP</module>
+    <module>endpoints/ChannelingFeeEP</module>
+    <module>endpoints/SettlePaymentEP</module>
+    <module>api/test</module>
+    <module>metadata/test_swagger</module>
+    <module>metadata/test_metadata</module>
+    <module>sequences/requestSequence</module>
+    <module>sequences/responseSequence</module>
+    <module>sequences/entrySequence</module>
+    <module>sequences/callEndpointSequence</module>
+  </modules>
+</project>

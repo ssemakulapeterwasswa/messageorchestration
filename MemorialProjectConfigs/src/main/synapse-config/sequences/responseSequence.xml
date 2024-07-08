@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="responseSequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+    <!-- Log the Response Message to a File -->
+    <!-- Log the Response Message to a File -->
+    <!-- Request-126374 -->
+    <log level="full">
+        <property name="MESSAGE :::::::: " value="RESPONSE "/>
+    </log>
+    <property expression="fn:concat('Response - ', get-property('CorrID'), '.xml')" name="transport.vfs.ReplyFileName" scope="transport" type="STRING"/>
+    <property name="OUT_ONLY" scope="default" type="STRING" value="true"/>
+    <!-- Request-126374 -->
+    <log level="custom">
+        <property expression="$trp:transport.vfs.ReplyFileName" name="GENERATED FILE NAME ::: "/>
+    </log>
+    <call>
+        <endpoint>
+            <address uri="vfs:file:///c:/Users/HP/Desktop/Files">
+                <suspendOnFailure>
+                    <initialDuration>-1</initialDuration>
+                    <progressionFactor>1</progressionFactor>
+                </suspendOnFailure>
+                <markForSuspension>
+                    <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                </markForSuspension>
+            </address>
+        </endpoint>
+    </call>
+    <property name="OUT_ONLY" scope="default" type="STRING" value="false"/>
+    <respond/>
+</sequence>

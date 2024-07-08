@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/msgroute" name="MessageRoute" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST" uri-template="/categories/{category}/reserve">
+        <inSequence>
+            <!-- Generate UUID using JavaScript and set it as CORRELATION_ID -->
+            <script language="js"><![CDATA[var uuid = generateUUID();
+                mc.setProperty('CorrID', uuid);
+                
+                function generateUUID() {
+                    var d = new Date().getTime();
+                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                        var r = (d + Math.random()*16)%16 | 0;
+                        d = Math.floor(d/16);
+                        return (c==='x' ? r : (r&0x3|0x8)).toString(16);
+                    });
+                }]]></script>
+            <!-- Set the Correlation ID in HTTP header -->
+            <header expression="get-property('CorrID')" name="Correlation-ID" scope="transport"/>
+            <property expression="json-eval($.)" name="MessagePayload" scope="default" type="STRING"/>
+            <!-- Log the Request Message to a File -->
+            <!-- Construct the dynamic file path with CorrID -->
+            <property name="transport.vfs.ReplyFileName" scope="transport" type="STRING" value="Request - 12345679"/>
+            <property name="OUT_ONLY" scope="default" type="STRING" value="true"/>
+            <!-- Request-126374 -->
+            <log level="custom">
+                <property expression="get-property('transport.vfs.ReplyFileName')" name="GENERATED FILE NAME ::: "/>
+            </log>
+            <call>
+                <endpoint>
+                    <address uri="vfs:file:///mnt/c/Users/HP/Desktop/Files">
+                        <suspendOnFailure>
+                            <initialDuration>-1</initialDuration>
+                            <progressionFactor>1</progressionFactor>
+                        </suspendOnFailure>
+                        <markForSuspension>
+                            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                        </markForSuspension>
+                    </address>
+                </endpoint>
+            </call>
+            <!-- Log the Request Message to a File -->
+            <log description="Message body" level="custom">
+                <property expression="get-property('MessagePayload')" name="Message PayLoad"/>
+                <property expression="get-property('CorrID')" name="Correlation-ID"/>
+            </log>
+            <log description="id retrival" level="custom">
+                <property expression="get-property('MessageID')" name="Message_id:"/>
+                <property expression="get-property('CorrID')" name="Correlation-ID"/>
+            </log>
+            <property description="Get Hospital" expression="json-eval($.hospital)" name="Hospital" scope="default" type="STRING"/>
+            <log description="Show hospital name" level="custom">
+                <property expression="get-property('Hospital')" name="Hospital retrived"/>
+                <property expression="get-property('MessageID')" name="Message_id:"/>
+                <property expression="get-property('CorrID')" name="Correlation-ID"/>
+            </log>
+            <switch source="get-property('Hospital')">
+                <case regex="grand oak community hospital">
+                    <log level="custom">
+                        <property expression="fn:concat('Navigating to :',get-property('Hospital'))" name="Hospital"/>
+                        <property expression="get-property('MessageID')" name="Message_id:"/>
+                        <property expression="get-property('CorrID')" name="Correlation-ID"/>
+                    </log>
+                    <send>
+                        <endpoint key="GrandOakEP"/>
+                    </send>
+                </case>
+                <case regex="clemency medical center">
+                    <log level="custom">
+                        <property expression="fn:concat('Navigating to :',get-property('Hospital'))" name="Hospital"/>
+                        <property expression="get-property('MessageID')" name="Message_id:"/>
+                        <property expression="get-property('CorrID')" name="Correlation-ID"/>
+                    </log>
+                    <send>
+                        <endpoint key="ClemencyEP"/>
+                    </send>
+                </case>
+                <case regex="pine valley community hospital">
+                    <log level="custom">
+                        <property expression="fn:concat('Navigating to :',get-property('Hospital'))" name="Hospital"/>
+                        <property expression="get-property('MessageID')" name="Message_id:"/>
+                        <property expression="get-property('CorrID')" name="Correlation-ID"/>
+                    </log>
+                    <send>
+                        <endpoint key="PineValleyEP"/>
+                    </send>
+                </case>
+                <default>
+                    <log level="custom">
+                        <property expression="fn:concat(get-property('Hospital'),': is invalid')" name="Hospital"/>
+                        <property expression="get-property('MessageID')" name="Message_id:"/>
+                        <property expression="get-property('CorrID')" name="Correlation-ID"/>
+                    </log>
+                </default>
+            </switch>
+        </inSequence>
+        <outSequence>
+            <log level="custom">
+                <property expression="json-eval($)" name="Response"/>
+                <property expression="get-property('CorrID')" name="CustomID"/>
+            </log>
+            <!-- Log the Response Message to a File -->
+            <send/>
+        </outSequence>
+        <faultSequence>
+            <payloadFactory media-type="json">
+                <format>{"STATUS":"ERROR OCCURRED",&#xd;
+"ERROR":"$1",&#xd;
+"ERROR DETAILS":"$2"}</format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:ERROR_MESSAGE"/>
+                    <arg evaluator="xml" expression="$ctx:ERROR_DETAILS"/>
+                </args>
+            </payloadFactory>
+            <respond/>
+        </faultSequence>
+    </resource>
+    <resource methods="POST" uri-template="/{category}/reserve">
+        <inSequence>
+            <property description="Get Hospital" expression="json-eval($.hospital_id)" name="uri.var.hospital" scope="default" type="STRING"/>
+            <property description="Get Card Number" expression="json-eval($.cardNo)" name="card_number" scope="default" type="STRING"/>
+            <call>
+                <endpoint key="HospitalServicesEP"/>
+            </call>
+            <property description="AppointmentNumber" expression="json-eval($.appointmentNumber)" name="uri.var.appointment_id" scope="default" type="STRING"/>
+            <property description="Doctor Detail" expression="json-eval($.doctor)" name="doctor_details" scope="default" type="STRING"/>
+            <property description="Patient Details" expression="json-eval($.patient)" name="patient_details" scope="default" type="STRING"/>
+            <call>
+                <endpoint key="ChannelingFeeEP"/>
+            </call>
+            <property description="actual fee" expression="json-eval($.actualFee)" name="actual_fee" scope="default" type="STRING"/>
+            <payloadFactory media-type="json">
+                <format>{"appointmentNumber":$1, "doctor":$2, "patient":$3, "fee":$4, "confirmed":"false", "card_number":"$5"}</format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:uri.var.appointment_id"/>
+                    <arg evaluator="xml" expression="$ctx:doctor_details"/>
+                    <arg evaluator="xml" expression="$ctx:patient_details"/>
+                    <arg evaluator="xml" expression="$ctx:actual_fee"/>
+                    <arg evaluator="xml" expression="$ctx:card_number"/>
+                </args>
+            </payloadFactory>
+            <send>
+                <endpoint key="SettlePaymentEP"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+</api>

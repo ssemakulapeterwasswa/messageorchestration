@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/tst" name="test" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST" uri-template="/{name}/new">
+        <inSequence>
+            <log level="custom">
+                <property name="MESSAGE ::::::::: " value="REQUEST RECEIVED"/>
+            </log>
+            <sequence key="entrySequence"/>
+            <sequence key="callEndpointSequence"/>
+        </inSequence>
+        <outSequence>
+            <!-- Log the Response Message to a File -->
+            <!-- Request-126374 -->
+            <!-- Log the Response Message to a File -->
+            <!-- Request-126374 -->
+            <sequence key="responseSequence"/>
+        </outSequence>
+        <faultSequence>
+            <property expression="fn:concat('Response - ', get-property('CorrID'), '.json')" name="transport.vfs.ReplyFileName" scope="transport" type="STRING"/>
+            <property name="OUT_ONLY" scope="default" type="STRING" value="true"/>
+            <!-- Request-126374 -->
+            <log level="custom">
+                <property expression="$trp:transport.vfs.ReplyFileName" name="GENERATED FILE NAME ::: "/>
+            </log>
+            <payloadFactory media-type="json">
+                <format>{"STATUS":"ERROR OCCURRED",&#xd;
+"ERROR":"$1",&#xd;
+"ERROR DETAILS":"$2"}</format>
+                <args>
+                    <arg evaluator="xml" expression="$ctx:ERROR_MESSAGE"/>
+                    <arg evaluator="xml" expression="$ctx:ERROR_DETAIL"/>
+                </args>
+            </payloadFactory>
+            <call>
+                <endpoint>
+                    <address uri="vfs:file:///c:/Users/HP/Desktop/Files">
+                        <suspendOnFailure>
+                            <initialDuration>-1</initialDuration>
+                            <progressionFactor>1</progressionFactor>
+                        </suspendOnFailure>
+                        <markForSuspension>
+                            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+                        </markForSuspension>
+                    </address>
+                </endpoint>
+            </call>
+            <respond/>
+        </faultSequence>
+    </resource>
+</api>
